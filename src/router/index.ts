@@ -1,26 +1,38 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
 
+import PublicLayout from "@/layouts/PublicLayout.vue";
+import AuthLayout from "@/layouts/AuthLayout.vue";
+import AdminLayout from "@/layouts/AdminLayout.vue";
+
+import HomeView from "@/views/public/HomeView.vue";
+import LoginView from "@/views/auth/LoginView.vue";
+import AdminDashboardView from "@/views/admin/AdminDashboardView.vue";
+import ClientsView from "@/views/admin/ClientsView.vue";
+import AppointmentsView from "@/views/admin/AppointmentsView.vue";
+
 const routes: RouteRecordRaw[] = [
   {
     path: "/",
-    name: "home",
-    component: () => import("@/views/public/HomeView.vue"),
+    component: PublicLayout,
+    children: [{ path: "", name: "home", component: HomeView }],
   },
   {
-    path: "/auth/login",
-    name: "login",
-    component: () => import("@/views/auth/LoginView.vue"),
+    path: "/auth",
+    component: AuthLayout,
+    children: [{ path: "login", name: "login", component: LoginView }],
   },
   {
     path: "/admin",
-    name: "admin",
-    component: () => import("@/views/admin/AdminDashboardView.vue"),
+    component: AdminLayout,
+    children: [
+      { path: "", name: "admin", component: AdminDashboardView },
+      { path: "clients", name: "clients", component: ClientsView },
+      { path: "appointments", name: "appointments", component: AppointmentsView },
+    ],
   },
 ];
 
-const router = createRouter({
+export default createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
-
-export default router;
